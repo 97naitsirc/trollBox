@@ -17,19 +17,18 @@ app.use(express.static(publicPath)); //will pull the only html file inside publi
 io.on('connection',(socket)=>{
 console.log('New User connected');
 
-//sending data to client
 
-socket.emit('newMessage', {
-    from: 'pan@panda.com',
-    text: 'Hello',
-    createAt: 123
-}); //emitting event to client
+socket.on('createMessage', (newMessage)=>{
 
-//receives data from client
+    console.log('createMessage', newMessage);
 
-socket.on('createMessage', (newEmail)=>{
+    //emits new message on client when a new message is created 
 
-    console.log('createMessage', newEmail);
+    io.emit('newMessage',{
+        from: newMessage.from,
+        text: newMessage.text,
+        createAt: new Date().getTime()
+    });
 
 });
 
