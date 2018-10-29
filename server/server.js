@@ -4,6 +4,8 @@ const http = require('http');
 
 const path = require('path');
 
+const {generateMessage } = require('./utils/message');
+
 const publicPath = path.join(__dirname,'../public');
 
 const port = process.env.PORT || 3000;
@@ -19,20 +21,15 @@ console.log('New User connected');
 
  //emit from Admin to welcome new user
 
- socket.emit('newMessage',{
-    from: 'Admin',
-    text: 'Welcome to Chat App',
-    createAt: new Date().getTime()
-});
+//emitted once when a new bowser is opened
+
+ socket.emit('newMessage', generateMessage('Admin','Welcome to Chat App'));
 
 //broadcast emit from Admin to text new user joined
 
-socket.broadcast.emit('newMessage',{
-    from: 'Admin' ,
-        text: 'New User Joined!',
-        createAt: new Date().getTime()
+//emitted everytime when a new browser is opened in all the browsers but the new one
 
-});
+socket.broadcast.emit('newMessage', generateMessage('Admin','New User Joined!'));
 
 socket.on('createMessage', (newMessage)=>{
 
@@ -40,18 +37,14 @@ socket.on('createMessage', (newMessage)=>{
 
        //emits/ calls  new message on client when a new message is created 
 
-    io.emit('newMessage',{
-        from: newMessage.from,
-        text: newMessage.text,
-        createAt: new Date().getTime()
-    });
+    io.emit('newMessage',generateMessage(newMessage.from,newMessage.text));
 
     //message will be viewed by everyone but the sender
 
     // socket.broadcast.emit('newMessage',{
     //     from: newMessage.from,
     //         text: newMessage.text,
-    //         createAt: new Date().getTime()
+    //         createdAt: new Date().getTime()
 
     // });
 
