@@ -4,7 +4,7 @@ const http = require('http');
 
 const path = require('path');
 
-const { generateMessage } = require('./utils/message');
+const { generateMessage, generatelocationMessage } = require('./utils/message');
 
 const publicPath = path.join(__dirname, '../public');
 
@@ -31,6 +31,12 @@ io.on('connection', (socket) => {
         io.emit('newMessage', generateMessage(newMessage.from, newMessage.text));
 
         callback('This is from server');
+
+    });
+
+    socket.on('createLocationMessage', (coords) => {
+
+        io.emit('newLocationMessage', generatelocationMessage('Admin', coords.latitude, coords.longitude));
 
     });
 
