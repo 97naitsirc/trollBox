@@ -1,6 +1,6 @@
 var expect = require('expect');
 
-var { generateMessage, generatelocationMessage } = require('./message');
+var { generateMessage, generatelocationMessage } = require('../message');
 
 describe('generateMessage', () => {
 

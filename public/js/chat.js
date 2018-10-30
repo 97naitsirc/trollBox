@@ -1,5 +1,7 @@
 var socket = io();
 
+/***** AUTOSCROLLING *****/
+
 function scrollToBottom() {
 
     //selectors
@@ -26,12 +28,28 @@ function scrollToBottom() {
 
 }
 
+/***** ROOM CONNECTION WHEN CHAT.HTML IS LOADED *****/
+
 socket.on('connect', function () {
+
     console.log('Connected to the server');
 
+    var params = jQuery.deparam(window.location.search);
 
+    //emitting custom event that will be listened by server - creates the room with parameter passed
+
+    socket.emit('join', params, function (err) {
+        if (err) {
+            alert(err);
+            window.location.href = '/';
+        } else {
+            console.log('No Error');
+        }
+    });
 
 });
+
+/***** AFTER DISCONNECTION FROM CHAT.HTML *****/
 
 socket.on('disconnect', function () {
     console.log('User Disconnected from the server');
@@ -39,11 +57,34 @@ socket.on('disconnect', function () {
 
 //custom events
 
+/********************************************** UPDATE USER LIST **********************************************/
+
+socket.on('updateUserList', function(users){
+
+   var ol = jQuery('<ol>/<ol>'); //creating an ordered list
+   users.forEach(function(user) {
+
+    ol.append(jQuery('<li></li>').text(user)); //appending ordered list with list item - with its text property set to user name
+       
+   });
+
+   jQuery('#users').html(ol);  //setting the DOM element with ID 'users' to ol
+
+});
+
+
+
+/********************************************** INCOMING EVENTS - SERVER EMITS CLIENT LISTENS **********************************************/
+
+/***** MESSAGE INCOMING *****/
+
 socket.on('newMessage', function (message) {
 
     var formattedTime = moment(message.createdAt).format('h:mm a');
 
     var template = jQuery('#message-template').html();
+
+    //appends messages on browser
 
     var html = Mustache.render(template, {
         text: message.text,
@@ -55,14 +96,10 @@ socket.on('newMessage', function (message) {
     scrollToBottom();
 
 
-    // //appends messages on browser
-
-    // var li = jQuery('<li></li>')
-    // li.text(`${message.from} ${formattedTime}: ${message.text}`);
-
-    // jQuery('#messages').append(li);
-
 });
+
+
+/***** LOCATION INCOMING *****/
 
 //Geolocation URL on browser
 
@@ -71,6 +108,8 @@ socket.on('newLocationMessage', function (message) {
     var formattedTime = moment(message.createdAt).format('h:mm a');
 
     var template = jQuery('#location-message-template').html();
+
+    //appends location on browser
 
     var html = Mustache.render(template, {
         url: message.url,
@@ -81,15 +120,11 @@ socket.on('newLocationMessage', function (message) {
     jQuery('#messages').append(html);
     scrollToBottom();
 
-    // var li = jQuery('<li></li>');
-    // var a = jQuery('<a target = "_blank" >My Current Location</a>');
-
-    // li.text(`${message.from}  ${formattedTime}: `);
-    // a.attr('href', message.url);
-    // li.append(a);
-
-    // jQuery('#messages').append(li);
 });
+
+/********************************************** OUTGOING EVENTS - CLIENT EMITS SERVER LISTENS **********************************************/
+
+/***** MESSAGE OUTGOING *****/
 
 //gets the message from browser form and sends it to server when submitted
 
@@ -109,6 +144,8 @@ jQuery('#message-form').on('submit', function (e) {
     });
 
 });
+
+/***** LOCATION OUTGOING *****/
 
 //gets user's location using Geolocation API available by default in browser
 
