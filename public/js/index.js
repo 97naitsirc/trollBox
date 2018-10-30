@@ -1,5 +1,31 @@
 var socket = io();
 
+function scrollToBottom() {
+
+    //selectors
+
+    var messages = jQuery('#messages');
+
+    var newMessage = messages.children('li:last-child');  //get the recent message
+
+    //heights
+
+    var clientHeight = messages.prop('clientHeight');
+    var scrollTop = messages.prop('scrollTop');
+    var scrollHeight = messages.prop('scrollHeight');
+    var newMessageHeight = newMessage.innerHeight();
+    var lastMessageHeight = newMessage.prev().innerHeight(); //get the second last message height
+
+
+    if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+
+        messages.scrollTop(scrollHeight); //jquery function
+    }
+
+
+
+}
+
 socket.on('connect', function () {
     console.log('Connected to the server');
 
@@ -26,8 +52,8 @@ socket.on('newMessage', function (message) {
     });
 
     jQuery('#messages').append(html);
+    scrollToBottom();
 
-    
 
     // //appends messages on browser
 
@@ -53,7 +79,7 @@ socket.on('newLocationMessage', function (message) {
     });
 
     jQuery('#messages').append(html);
-
+    scrollToBottom();
 
     // var li = jQuery('<li></li>');
     // var a = jQuery('<a target = "_blank" >My Current Location</a>');
@@ -93,7 +119,7 @@ locationButton.on('click', function () {
         return alert('Geolocation not supported by yout browser');
     }
 
-    locationButton.attr('disabled','disabled').text('Sending location...'); //disabling button until the location is sent to server
+    locationButton.attr('disabled', 'disabled').text('Sending location...'); //disabling button until the location is sent to server
 
     navigator.geolocation.getCurrentPosition(function (position) {
 
