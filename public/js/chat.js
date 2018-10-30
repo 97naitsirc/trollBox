@@ -59,16 +59,16 @@ socket.on('disconnect', function () {
 
 /********************************************** UPDATE USER LIST **********************************************/
 
-socket.on('updateUserList', function(users){
+socket.on('updateUserList', function (users) {
 
-   var ol = jQuery('<ol>/<ol>'); //creating an ordered list
-   users.forEach(function(user) {
+    var ol = jQuery('<ol>/<ol>'); //creating an ordered list
+    users.forEach(function (user) {
 
-    ol.append(jQuery('<li></li>').text(user)); //appending ordered list with list item - with its text property set to user name
-       
-   });
+        ol.append(jQuery('<li></li>').text(user)); //appending ordered list with list item - with its text property set to user name
 
-   jQuery('#users').html(ol);  //setting the DOM element with ID 'users' to ol
+    });
+
+    jQuery('#users').html(ol);  //setting the DOM element with ID 'users' to ol
 
 });
 
@@ -135,7 +135,7 @@ jQuery('#message-form').on('submit', function (e) {
     var messageTextBox = jQuery('[name=message]');
 
     socket.emit('createMessage', {
-        from: 'User',
+        
         text: messageTextBox.val() //gets value of DOM object with property name as message
     }, function () {
 

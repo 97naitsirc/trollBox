@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
 
         io.to(params.room).emit('updateUserList', users.getUserList(params.room)); //calling updateUserList() on client 
 
-        /********************************************** WELCOME MESSAGE WHEN CONNECTED - 1 USER ***********************************/
+        /***********************************WELCOME MESSAGE WHEN CONNECTED - 1 USER ***********************************/
 
         socket.emit('newMessage', generateMessage('Admin', 'Welcome to Chat App'));
 
@@ -63,8 +63,16 @@ io.on('connection', (socket) => {
 
         //console.log('createMessage', newMessage);
 
+        var user = users.getUser(socket.id);
 
-        io.emit('newMessage', generateMessage(newMessage.from, newMessage.text));
+        if (user && isRealString(newMessage.text)) {
+
+            //Sending message only to the room connected 
+
+            io.to(user.room).emit('newMessage', generateMessage(user.name, newMessage.text));
+
+        }
+
 
         callback();
 
@@ -72,7 +80,15 @@ io.on('connection', (socket) => {
 
     socket.on('createLocationMessage', (coords) => {
 
-        io.emit('newLocationMessage', generatelocationMessage('Admin', coords.latitude, coords.longitude));
+        var user = users.getUser(socket.id);
+
+        if (user) {
+
+            io.to(user.room).emit('newLocationMessage', generatelocationMessage(user.name, coords.latitude, coords.longitude));
+
+        }
+
+       
 
     });
 
@@ -80,9 +96,9 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         var user = users.removeUser(socket.id);
-        if(user){
+        if (user) {
             io.to(user.room).emit('updateUserList', users.getUserList(user.room)); //update user list
-            io.to(user.room).emit('newMessage', generateMessage('Admin',`${user.name} has left`)); //indicates that user has left
+            io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} has left`)); //indicates that user has left
         }
         console.log('Disconnected from the server');
     });
