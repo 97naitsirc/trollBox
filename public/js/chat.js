@@ -34,9 +34,25 @@ socket.on('connect', function () {
 
     console.log('Connected to the server');
 
-    var params = jQuery.deparam(window.location.search);
+    var paramsWindow = jQuery.deparam(window.location.search);
 
     //emitting custom event that will be listened by server - creates the room with parameter passed
+
+    if((paramsWindow.room).trim()===''){
+
+        roomSelected = paramsWindow.roomSelect;
+    }else{
+
+        roomSelected  = paramsWindow.room;
+    }
+
+    var params = {
+
+        name: paramsWindow.name,
+        room: roomSelected.toUpperCase()
+        
+
+    };
 
     socket.emit('join', params, function (err) {
         if (err) {
@@ -135,7 +151,7 @@ jQuery('#message-form').on('submit', function (e) {
     var messageTextBox = jQuery('[name=message]');
 
     socket.emit('createMessage', {
-        
+
         text: messageTextBox.val() //gets value of DOM object with property name as message
     }, function () {
 

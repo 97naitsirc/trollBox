@@ -13,22 +13,22 @@ describe('Users', () => {
         usersObj.users = [{
             id: '1',
             name: 'Tian',
-            room: 'Pandas'
+            room: 'PANDAS'
         },
         {
             id: '2',
             name: 'Mei',
-            room: 'Pandas'
+            room: 'PANDAS'
         },
         {
             id: '3',
             name: 'Aslan',
-            room: 'Fiction'
+            room: 'FICTION'
         },
         {
             id: '4',
             name: 'Hedwig',
-            room: 'Fiction'
+            room: 'FICTION'
         }]
 
     });
@@ -41,9 +41,10 @@ describe('Users', () => {
 
             id: '123',
             name: 'Pan',
-            room: 'Panda'
+            room: 'PANDA'
 
         };
+
 
         resUser = usersObj.addUser(user.id, user.name, user.room);
 
@@ -78,7 +79,7 @@ describe('Users', () => {
 
     });
 
-    it('should find user', () => {
+    it('should find user by ID', () => {
 
         var userID = '3';
 
@@ -88,11 +89,33 @@ describe('Users', () => {
 
     });
 
-    it('should not find user', () => {
+    it('should not find user by ID', () => {
 
         var userID = '99';
 
         var user = usersObj.getUser(userID);
+
+        expect(user).toNotExist();
+
+
+    });
+
+    
+    it('should find user by name', () => {
+
+        var userName = 'Tian';
+
+        var user = usersObj.getUserByName(userName);
+
+        expect(user.name).toBe(userName);
+
+    });
+
+    it('should not find user by name', () => {
+
+        var userName = 'BaoBao';
+
+        var user = usersObj.getUserByName(userName);
 
         expect(user).toNotExist();
 
@@ -115,4 +138,13 @@ describe('Users', () => {
 
     });
 
+    it('should return rooms', () => {
+
+        var roomList = usersObj.getRoomList();
+
+        expect(roomList).toEqual(['PANDAS', 'FICTION']);
+
+    });
+
+    
 });

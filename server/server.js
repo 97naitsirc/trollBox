@@ -26,6 +26,8 @@ io.on('connection', (socket) => {
 
     console.log('New User connected');
 
+    socket.emit('roomList', users.getRoomList());
+
     /********************************************** ROOM CONNECTION **************************************************/
 
     socket.on('join', (params, callback) => {
@@ -35,6 +37,14 @@ io.on('connection', (socket) => {
             return callback('Name and room name are required');
         }
 
+       if(users.getUserByName(params.name)){
+
+        return callback('User name already exists. Please use a different name');
+
+       }
+
+       console.log(params);
+       
         socket.join(params.room); //joins the user to the room
 
         users.removeUser(socket.id) //remove the user if existing
@@ -109,6 +119,6 @@ io.on('connection', (socket) => {
 
 server.listen(port, () => {
 
-    console.log(`Listening on Port ${port}...`);
+        console.log(`Listening on Port ${port}...`);
 });
 

@@ -6,9 +6,11 @@ class Users {
 
     }
 
-    addUser(id, name, room){
+    addUser(id, name, roomPar){
 
-        var user = {id,name,room};
+        var room = roomPar.toUpperCase();
+
+        var user = {id,name, room};
 
         this.users.push(user);
 
@@ -37,13 +39,29 @@ class Users {
 
     }
 
+    getUserByName(name){
+
+        var userFiltered = this.users.filter((user)=>user.name === name)[0];
+
+        return userFiltered;
+
+    }
+
     getUserList(room){
 
-        var usersFiltered = this.users.filter((user)=>user.room === room);
+        var usersFiltered = this.users.filter((user)=>user.room === room.toUpperCase());
 
         var namesArray = usersFiltered.map((user)=>user.name);
 
         return namesArray;
+
+    }
+
+    getRoomList(){
+
+        var roomArray = this.users.map((user)=>user.room);
+
+        return [...new Set(roomArray)]; //returns unique items
 
     }
 
