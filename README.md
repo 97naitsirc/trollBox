@@ -34,4 +34,6 @@ Open Link http://localhost:3000/
 
 [Heroku](https://chatter-box-app.herokuapp.com/)
 
+### Documents
 
+[Socket And AutoScrolling Explained](Socket and AutoScrolling Explained.pdf)
