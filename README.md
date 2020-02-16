@@ -1,4 +1,4 @@
-# CHATTER BOX APP
+# TROLL BOX APP
 
 ### Dependencies :package:
 
@@ -32,7 +32,7 @@ Open Link http://localhost:3000/
 
 ### Hosting Site :globe_with_meridians:
 
-[Heroku](https://chatter-box-app.herokuapp.com/)
+[Heroku](https://troll-box.herokuapp.com/)
 
 ### Documents :notebook_with_decorative_cover:
 
